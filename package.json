@@ -1,0 +1,24 @@
+{
+  "name": "docker-compose-image-updater",
+  "version": "1.0.0",
+  "description": "Easily update a docker-compose.yml files images",
+  "bin": { 
+    "dciu": "./bin/index.js" 
+  },
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1",
+    "start": "node ./bin/index.js"
+  },
+  "author": {
+    "email": "cwysong85@gmail.com",
+    "name": "Corey Wysong"
+  },
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/cwysong85/docker-compose-image-updater"
+  },
+  "license": "MIT",
+  "dependencies": {
+    "js-yaml": "^3.13.1"
+  }
+}
