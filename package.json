@@ -1,6 +1,6 @@
 {
   "name": "docker-compose-image-updater",
-  "version": "1.0.0",
+  "version": "1.0.1",
   "description": "Easily update a docker-compose.yml files images",
   "bin": { 
     "dciu": "./bin/index.js" 
