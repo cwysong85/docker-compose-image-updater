@@ -46,6 +46,6 @@ Example `images-to-update.json` file:
 
 ### Running
 ```
-dciu --update-file /path/to/update-file.json --yaml-file /path/to/docker-compose.yml
+dciu -u /path/to/update-file.json -y /path/to/docker-compose.yml
 ```
 
