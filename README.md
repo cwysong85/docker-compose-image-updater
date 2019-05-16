@@ -19,6 +19,7 @@ Options:
   -v, --version              print dciu version
   -u, --update-file          JSON update file to pass in
   -y, --yaml-file            YAML file to update, typically a docker-compose.yml file
+  -o, --omit-backup          Do not produce a backup of the original file. Default is to backup the file e.g. docker-compose.yml.1558044602.backup
 ```
 
 ### Update JSON file syntax
