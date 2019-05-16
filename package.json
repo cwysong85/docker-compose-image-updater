@@ -20,5 +20,6 @@
   "license": "MIT",
   "dependencies": {
     "js-yaml": "^3.13.1"
-  }
+  },
+  "keywords": ["docker", "docker-compose", "docker-compose.yml", "yaml", "yml", "images", "docker-compose-image-updater"]
 }
