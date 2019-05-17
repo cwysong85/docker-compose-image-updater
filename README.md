@@ -46,12 +46,15 @@ Example `images-to-update.json` file:
 
 This command will update a docker-compose.yml file images with new images and create a backup of the old docker compose file.
 ```
-dciu -u images-to-update.yml -y docker-compose.yml
-Created backup file "test-files/docker-compose.yml.1558053560.backup"
-Updated "test-files/docker-compose.yml" with new values
+$> dciu -u images-to-update.yml -y docker-compose.yml
+
+Created backup file "docker-compose.yml.1558053560.backup"
+Updated "docker-compose.yml" with new values
 ```
 
 To omit a backup, use the `-o` argument:
 ```
-dciu -u images-to-update.yml -y docker-compose.yml -o
+$> dciu -u images-to-update.yml -y docker-compose.yml -o
+
+Updated "docker-compose.yml" with new values
 ```
