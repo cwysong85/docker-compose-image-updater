@@ -7,6 +7,7 @@ const pkg = require('../package.json')
 
 var args = process.argv.slice(2)
 var updateFilePath = null
+var updateFileExtName = null
 var yamlFilePath = null
 var backup = true
 
@@ -21,7 +22,7 @@ if(args.includes('--help')) {
     
     Options:
       -v, --version              print dciu version
-      -u, --update-file          JSON update file to pass in
+      -u, --update-file          YAML or JSON update file to pass in
       -y, --yaml-file            YAML file to update, typically a docker-compose.yml file
       -o, --omit-backup          Do not produce a backup of the original file. Default is to backup the file e.g. docker-compose.yml.1558044602.backup`)
     process.exit();
@@ -56,10 +57,11 @@ if (!args.includes('--update-file') && !args.includes('-u')) {
         console.log('File "' + f + '" does not exist!')
         process.exit()
     } else {
-        if(path.extname(f) !== '.json') {
-            console.log('File "' + f + '" is not a JSON file.');
+        if(path.extname(f) !== '.json' && path.extname(f) !== '.yml' && path.extname(f) !== '.yaml') {
+            console.log('File "' + f + '" is not a YAML or JSON file.');
             process.exit()
         }
+        updateFileExtName = path.extname(f)
         updateFilePath = f
     }
 }
@@ -92,50 +94,45 @@ if (!args.includes('--yaml-file') && !args.includes('-y')) {
     }
 }
 
-
-var replaceInYaml = (obj, yamlDoc, parentKey) => {
-    for (const key in obj) {
-        if (obj.hasOwnProperty(key)) {
-            if(typeof obj[key] === 'object') {
-                yamlDoc = replaceInYaml(obj[key], yamlDoc, key)
-            } else {
-                if(yamlDoc.services[parentKey] && yamlDoc.services[parentKey][key]) {
-                    yamlDoc.services[parentKey][key] = obj[key]
-                }
+var replaceInYaml = (replaceObj, yamlDoc) => {
+    for (const key in replaceObj) {
+        if (replaceObj.hasOwnProperty(key)) {
+            if(yamlDoc.services[key] && yamlDoc.services[key].image) {
+                yamlDoc.services[key].image = replaceObj[key];
             }
         }
     }
-    return yamlDoc
+    return yamlDoc;
 }
 
 try {
     var yamlDoc = yaml.safeLoad(fs.readFileSync(yamlFilePath, 'utf8'))
-    var jsonDoc
+    var updateDoc
     
-    try {
-        jsonDoc = JSON.parse(fs.readFileSync(updateFilePath, 'utf-8'))
-    } catch(e) {
-        console.log("Could not parse JSON file")
-        process.exit()
+    if(updateFileExtName === '.json'){
+        try {
+            updateDoc = JSON.parse(fs.readFileSync(updateFilePath, 'utf-8'))
+        } catch(e) {
+            console.log("Could not parse JSON file")
+            process.exit()
+        }
+    } else {
+        updateDoc = yaml.safeLoad(fs.readFileSync(updateFilePath, 'utf8'))
     }
 
-    if(!jsonDoc) {
-        console.log('JSON doc is not valid');
-        process.exit()
-    }
-
-    if(!jsonDoc.services) {
-        console.log('File "' + updateFilePath + '" must include "services" object!')
+    if(!updateDoc) {
+        console.log('YAML or JSON update file is not valid');
         process.exit()
     }
 
     if(!yamlDoc.services) {
-        console.log('File "' + yamlFilePath + '" must include "services:" object!')
+        console.log('File "' + yamlFilePath + '" is not a valid docker compose file. Missing "services" entry.')
         process.exit()
     }
 
     try {
-        var newYaml = yaml.dump(replaceInYaml(jsonDoc, yamlDoc))
+
+        var newYaml = yaml.dump(replaceInYaml(updateDoc, yamlDoc))
 
         if(newYaml && !backup) {
             

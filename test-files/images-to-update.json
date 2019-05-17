@@ -1,13 +1,5 @@
 {
-    "services": {
-        "nginx": {
-            "image": "nginx:1.16"
-        },
-        "mysql": {
-            "image": "mysql:8.0"
-        },
-        "hello-world": {
-            "image": "hello-world:latest"
-        }
-    }
+    "service1": "nginx:1.16",
+    "service2": "mysql:8.0",
+    "service3": "hello-world:latest"
 }

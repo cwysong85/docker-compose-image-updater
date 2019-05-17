@@ -1,12 +1,11 @@
 {
   "name": "docker-compose-image-updater",
-  "version": "1.0.1",
+  "version": "1.0.2",
   "description": "Easily update a docker-compose.yml files images",
   "bin": { 
     "dciu": "./bin/index.js" 
   },
   "scripts": {
-    "test": "echo \"Error: no test specified\" && exit 1",
     "start": "node ./bin/index.js"
   },
   "author": {

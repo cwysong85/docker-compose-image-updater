@@ -1,14 +1,14 @@
 # Docker Compose Image Updater
-A simple way to update an existing docker-compose.yml file with images you provide.
+A simple and effective way to update image paths in an existing docker-compose.yml file.
 
-Managing a big docker-compose file can be tedious at times. If you're like me and are constantly updating docker-compose files across multiple machines, this tool makes life a lot easier. 
+Maintaining a large docker compose file can be tedious. If you have a team of developers or have several VM's with a similiar docker compose file but with different environment variables, using this tool you can easily update only the image paths in a large docker-compose.yml file.
 
-### Installation
+## Installation
 ```
 npm i docker-compose-image-updater -g
 ```
 
-#### Usage
+## Usage
 
 ```
 $> dciu --help
@@ -17,35 +17,41 @@ Usage: dciu [options]
 
 Options:
   -v, --version              print dciu version
-  -u, --update-file          JSON update file to pass in
+  -u, --update-file          YAML or JSON update file to pass in
   -y, --yaml-file            YAML file to update, typically a docker-compose.yml file
   -o, --omit-backup          Do not produce a backup of the original file. Default is to backup the file e.g. docker-compose.yml.1558044602.backup
 ```
+## Update file
+The update file is a simple one-to-one mapping. The "service" name mapped to the docker "image". Below are examples files in YAML and in JSON.
 
-### Update JSON file syntax
- - Must have a "services" object
- - Must have services that match your services under your docker-compose.yml file
- - Must have a "image" under your service
+### --update-file YAML file syntax
+Example `images-to-update.yml` file:
+```
+service1: nginx:1.16
+service2: mysql:8.0
+service3: hello-world:latest
+```
 
+### --update-file JSON file syntax
 Example `images-to-update.json` file:
 ```
 {
-    "services": {
-        "nginx": {
-            "image": "nginx:1.16"
-        },
-        "mysql": {
-            "image": "mysql:8.0"
-        },
-        "hello-world": {
-            "image": "hello-world:latest"
-        }
-    }
+    "service1": "nginx:1.16",
+    "service2": "mysql:8.0",
+    "service3": "hello-world:latest"
 }
 ```
 
-### Running
+## Commands
+
+This command will update a docker-compose.yml file images with new images and create a backup of the old docker compose file.
 ```
-dciu -u /path/to/update-file.json -y /path/to/docker-compose.yml
+dciu -u images-to-update.yml -y docker-compose.yml
+Created backup file "test-files/docker-compose.yml.1558053560.backup"
+Updated "test-files/docker-compose.yml" with new values
 ```
 
+To omit a backup, use the `-o` argument:
+```
+dciu -u images-to-update.yml -y docker-compose.yml -o
+```
